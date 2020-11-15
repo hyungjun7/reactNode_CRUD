@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input, Button } from 'antd';
-
+import axios from 'axios';
+const {getFieldValues} = Form;
 
 const layout = {
     labelCol: {
@@ -17,25 +18,20 @@ const layout = {
     },
   };
 const Register = () => {
-    const onFinish = (name) => {
-        switch (name) {
-            case 'user_id':
-                
-            break;
-            case 'user_pw':
-
-            break;
-            case 'user_email':
-
-            break;
-            default:
-                break;
-        }
-      };
     
       const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
       };
+
+      const onSubmit = async() => {
+        
+        console.log('sadas');
+        axios.post('/users/join', {
+          user_id: getFieldValues('user_id'),
+          user_pw: getFieldValues('user_pw'),
+          user_email: getFieldValues('user_email'),
+        })
+      }
     return (
         <Form
       {...layout}
@@ -43,8 +39,8 @@ const Register = () => {
       initialValues={{
         remember: true,
       }}
-      onFinish={onFinish}
       onFinishFailed={onFinishFailed}
+      
     >
       <Form.Item
         label="아이디"
@@ -84,7 +80,7 @@ const Register = () => {
       >
         <Input.Password />
       </Form.Item>
-
+        
       <Form.Item
         label="이메일"
         name="user_email"
@@ -98,7 +94,7 @@ const Register = () => {
         <Input />
         </Form.Item>
         <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" onClick={onSubmit}>
           회원가입
         </Button>
       </Form.Item>

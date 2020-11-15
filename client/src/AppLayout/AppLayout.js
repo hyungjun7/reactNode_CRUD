@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Navbar,
   Nav,
@@ -7,24 +7,9 @@ import {
   FormControl,
   Button,
 } from "react-bootstrap";
-import {Modal} from 'antd';
 import Login from './Login';
 
-function AppLayout(props, isLoggedIn) {
-  const [visible, setVisible] = useState(false);
-
-  const showModal = () => {
-    setVisible(true);
-  };
-
-  const okAction = (e) => {
-    setVisible(false);
-  };
-
-  const cancleAction = (e) => {
-    setVisible(false);
-  };
-  
+function AppLayout(props) {
   return (
     <>
       <Navbar
@@ -39,7 +24,7 @@ function AppLayout(props, isLoggedIn) {
             <Nav.Link href="/about">About</Nav.Link>
             <NavDropdown title="Link" id="basic-nav-dropdown">
               <NavDropdown.Item href="#">My GitHub</NavDropdown.Item>
-              <NavDropdown.Item href="fromme.tk">FROmme</NavDropdown.Item>
+              <NavDropdown.Item href="http://fromme.tk">FROmme</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Dev" id="basic-nav-dropdown">
               <NavDropdown.Item href="/dev/js">Javascript</NavDropdown.Item>
@@ -61,35 +46,8 @@ function AppLayout(props, isLoggedIn) {
               <NavDropdown.Item href="/hobby/trip">Trip</NavDropdown.Item>
             </NavDropdown>
           </Nav>
-
-          {isLoggedIn ? (
-            <>
-            <Button
-              variant="outline-success" 
-              style={{ marginRight: "10px" }}
-              onClick={showModal}
-              >
-              로그인
-            </Button>
-            <Modal
-              title="로그인"
-              visible={visible}
-              onOk={okAction}
-              onCancel={cancleAction}
-              footer={[
-                <Button key="back" onClick={cancleAction}>
-                  취소
-                </Button>,
-                <Button key="submit" type="primary" onClick={okAction}>
-                  로그인
-                </Button>
-              ]}>
-              <Login />
-            </Modal>
-            </>
-          ) : (
-            ""
-          )}
+            <Login />
+          
           <Form inline>
             <FormControl type="text" placeholder="" className="mr-sm-2" />
             <Button variant="outline-success">검색</Button>
