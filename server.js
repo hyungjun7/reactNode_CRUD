@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+const {sequelize} = require('./models/');
 const port = process.env.PORT || 5000;
 const cors = require('cors');
 const memberRouter = require('./routes/member');
@@ -14,6 +15,15 @@ dotenv.config();
 //패스포트 설정
 const app = express();
 app.use(cors());
+
+sequelize.sync({force: false}) 
+  .then(() => {
+    console.log('DB Connect Success!');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
 //로그 미들웨어 - 개발환경에서 dev, 배포시 combined
 app.use(morgan("dev"));
 //요청 처리해주는 미들웨어 - 요청의 본문을 해석하여 req.body 객체로 만들어준다.
@@ -21,7 +31,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 //raw, text 데이터 또한 처리할 수 있다.
 //extended 는 내장모듈인 querystring, true인 경우 외부모듈 qs
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //요청에 동봉된 쿠키를 req.cookie 객체로 만들어준다.
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -41,7 +51,7 @@ app.use(
     //세션 쿠키 - 일반적인 쿠키 옵션을 사용할 수 있음 
     //배포시 secure는 https로 적용하여 true 설정
     cookie: {
-      httponly: true,
+      httpOnly: true,
       secure: false,
     },
     name: "session-cookie",
@@ -49,6 +59,19 @@ app.use(
 );
 
 app.use('/api/users', memberRouter);
+
+app.use((req, res, next) => {
+  const error = new Error(`${req.method} ${req.url} 요청하신 페이지가 존재하지 않습니다.`);
+  error.status = 404;
+  next(error);
+});
+
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
+});
 
 app.listen(port, () => {
   console.log(`server running at ${port}`);

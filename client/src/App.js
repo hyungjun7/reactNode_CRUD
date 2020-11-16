@@ -13,7 +13,7 @@ const App = () => {
     
     <AppLayout>
       <Route path="/" render={()=> <CardList />} exact={true} />
-      <Route path="/register" component={Register} exact={true} />
+      <Route path="/join" component={Register} exact={true} />
       <Route path="/write" component={PostWrite} exact={true} />
       <Route path="/view" component={PostView} exact={true} />
       <Route path="/dev/:categori" component={CardList} exact={true} />

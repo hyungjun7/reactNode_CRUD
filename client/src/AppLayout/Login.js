@@ -34,6 +34,10 @@ const Login = (props) => {
     logout();
   };
 
+  const onReset = () => {
+    setInput({user_id: '', user_pw: ''});
+  }
+
   const onLogIn = async() => {
     const res = await fetch('/api/users/login', {
       method: 'POST',
@@ -45,11 +49,15 @@ const Login = (props) => {
         'Content-Type': 'application/json'
       }
     })
-    const body = res.json()
-    .then(body => {
-      if(body[0].chk === 1) {
+    await res.json()
+    .then((res) => {
+      console.log(res.status);
+      if(res.status === 'ok') {
+        onReset();
         loginSuccess();
         cancleAction();
+      } else {
+        alert(res.status);
       }
     })
     .catch(err => console.log(err));
