@@ -1,16 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {Typography, Divider} from 'antd';
 import {Button } from 'react-bootstrap';
 import {ArrowUpOutlined, ArrowDownOutlined} from '@ant-design/icons';
 import {IsLoggedIn} from '../context/context'
+import callApi from '../lib/callApi';
 const {Title, Paragraph, Text, Link} = Typography;
+
+
 
 
 const PostView = (props) => {
     const {loggedIn} = useContext(IsLoggedIn);
+    const [post, setPost] = useState({});
+    
+    useEffect(()=> {
+      callApi(`/api/posts/view?id=`, setPost);
+    }, [])
     return (
         <Typography>
-    <Title>Introduction</Title>
+    <Title>{post.post_title}</Title>
     <Divider />
     <Title>介绍</Title>
     <Paragraph>

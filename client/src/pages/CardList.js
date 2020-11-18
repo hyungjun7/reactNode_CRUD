@@ -1,24 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { List } from "antd";
 import { Button } from "react-bootstrap";
 import {IsLoggedIn} from '../context/context'
 import { Link } from "react-router-dom";
+import callApi from '../lib/callApi';
 
 const CardList = (props) => {
   const {loggedIn} = useContext(IsLoggedIn);
   let titleData = '최신 글';
-  const listData = [];
-  for (let i = 0; i < 23; i++) {
-    listData.push({
-      post_no: `${i}`,
-      href: "https://ant.design",
-      title: `노드 재밋다 ${i}`,
-      content:
-        "노드는 재밋고 리액트도 재밋는데 타입스크립트 배우고 싶다",
-      date: '1234',
-      user_id: 'step7'
-    });
-  }
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    callApi(`/api/posts/recent`, setList);
+  }, []);
+
+  
   return (
     <List
       itemLayout="vertical"
@@ -30,7 +26,7 @@ const CardList = (props) => {
         },
         pageSize: 10,
       }}
-      dataSource={listData}
+      dataSource={list}
       header={
         <div>
           <h3>{titleData}</h3>
@@ -42,16 +38,16 @@ const CardList = (props) => {
         </div>
       }
       renderItem={(item) => (
-        <List.Item key={item.post_no}>
+        <List.Item key={item.id}>
           <List.Item.Meta 
             title={
             <>
-            <a href={`/view?category=${item.category}&post-no=${item.post_no}`}>
-              <strong style={{fontSize: '18px'}}>{item.title}</strong>
-            </a>
-            <div style={{textAlign: 'right'}}>{item.date} | {item.user_id}</div>
+            <Link to={`/view?num=${item.id}`}>
+              <strong style={{fontSize: '18px'}}>{item.post_title}</strong>
+            </Link>
+            <div style={{textAlign: 'right'}}>{item.post_date.substring(0, 10)} | {item.user_id}</div>
             </>} />
-          {item.content}
+          {item.post_content.length > 20 ? item.post_content.length.substring(0, 19) : item.post_content}
         </List.Item>
       )}
     />

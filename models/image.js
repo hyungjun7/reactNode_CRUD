@@ -20,9 +20,9 @@ module.exports = class Image extends Sequelize.Model {
             //카멜케이스에서 스네이크 케이스로
             underscored: true,
             //모델 이름 설정
-            modelName: 'Member',
+            modelName: 'Image',
             //실제 테이블 이름
-            tableName: 'member',
+            tableName: 'image',
             //true로 설정 시 삭제일자 컬럼 추가된다.
             paranoid: false,
             charset: 'utf8mb4',
@@ -31,6 +31,6 @@ module.exports = class Image extends Sequelize.Model {
     }
     //다른 모델과의 관계를 여기에
     static associate(db) {
-        db.Image.hasMany(db.Post, {foreignKey: 'post_no', targetKey: 'id'});
+        db.Image.belongsTo(db.Post, {foreignKey: 'post_no', targetKey: 'id'});
     }
 }

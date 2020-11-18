@@ -14,8 +14,8 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 db.sequelize = sequelize;
 
 //해당 방법으로 디비 객체를 불러와서 사용할 수 있다.
-db.Member = Member;
 db.Post = Post;
+db.Member = Member;
 db.Board = Board;
 db.Comment = Comment;
 db.Image = Image;

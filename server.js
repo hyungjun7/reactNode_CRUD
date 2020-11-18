@@ -10,6 +10,7 @@ const port = process.env.PORT || 5000;
 const cors = require('cors');
 const memberRouter = require('./routes/member');
 const passportConfig = require('./passport');
+const postRouter = require('./routes/post');
 
 dotenv.config();
 //패스포트 설정
@@ -60,7 +61,6 @@ app.use(
     name: "session-cookie",
   })
 );
-
 //req 객체에 패스포트 설정을 넣는다.
 app.use(passport.initialize());
 
@@ -70,7 +70,8 @@ app.use(passport.session());
 app.use((req, res, next) => {
   res.locals.member = req.member;
   next(); 
-})
+});
+app.use('/api/posts', postRouter);
 app.use('/api/users', memberRouter);
 
 app.use((req, res, next) => {

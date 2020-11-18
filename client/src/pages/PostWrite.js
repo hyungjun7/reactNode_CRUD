@@ -48,7 +48,10 @@ const props = {
           ['link', 'image'],
           ['clean']
         ],
+        
       };
+
+      
 
      const formats = [
         'header',

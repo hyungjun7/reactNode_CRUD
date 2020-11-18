@@ -30,9 +30,9 @@ module.exports = class Comment extends Sequelize.Model {
             //카멜케이스에서 스네이크 케이스로
             underscored: true,
             //모델 이름 설정
-            modelName: 'Member',
+            modelName: 'Comment',
             //실제 테이블 이름
-            tableName: 'member',
+            tableName: 'comment',
             //true로 설정 시 삭제일자 컬럼 추가된다.
             paranoid: false,
             charset: 'utf8mb4',
