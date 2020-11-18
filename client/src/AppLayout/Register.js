@@ -30,10 +30,11 @@ const Register = () => {
         'Content-Type': 'application/json'
       }
     })
-    const body = res.json()
-    .then(() => {
-      if(body.status === 'ok') {
+    await res.json()
+    .then((res) => {
+      if(res.status === 'ok') {
         alert('회원가입 성공!');
+        window.location.href = '/';
       } else {
         alert('아이디 중복');
       }

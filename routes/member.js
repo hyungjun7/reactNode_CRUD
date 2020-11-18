@@ -3,43 +3,51 @@ const Member = require('../models/member');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
+const {isLoggedIn, isNotLoggedIn} = require('./middleware');
+const passport = require('passport');
 
-router.post('/login', async (req, res, next) => {
-    try {
-        const member = await Member.findOne({
-            where: {user_id: req.body.user_id}
-        });
-        if(member) {
-            const result = await bcrypt.compare(req.body.user_pw, member.user_pw);
-            if(result) {
-                req.session.user = req.body.user_id; 
-                res.send({'status': 'ok'});
-            } else {
-                res.send({'status': '아이디 또는 비밀번호가 다릅니다.'});
-            }
-        } else {
-            res.send({'status': '아이디 또는 비밀번호가 다릅니다.'});
+router.post('/login', isNotLoggedIn, async (req, res, next) => {
+    passport.authenticate('local', (authError, member, info) => {
+        if(authError) {
+            console.error(authError);
+            return next(authError);
         }
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
+        if(!member) {
+            return res.send(info.msg);
+        }
+        return req.login(member, (loginError) => {
+            if(loginError) {
+                console.error(loginError);
+                return next(loginError);
+            }
+            res.send({'status': 'ok'});
+        });
+    })(req, res, next);
 });
 
-router.post('/join', async (req, res, next) => {
+router.get('/logout', isLoggedIn, (req, res) => {
+    req.logout();
+    req.session.destroy();
+    res.send({'status': 'ok'});
+})
+
+router.post('/join', isNotLoggedIn, async (req, res, next) => {
+    const {user_id, user_pw, user_email} = req.body;
     try{
-        console.log(req.body.user_id);
-        const hashedPassword = await bcrypt.hash(req.body.user_pw, 12);
+        const idChk = await Member.findOne({where: {user_id}})
+        if(idChk) {
+            return res.send({'status': '이미 사용중인 아이디입니다.'});
+        }
+        const hashedPassword = await bcrypt.hash(user_pw, 12);
         const member = await Member.create({
-            user_id: req.body.user_id,
+            user_id: user_id,
             user_pw: hashedPassword,
-            user_email: req.body.user_email,
+            user_email: user_email,
             user_grant: 2, 
         });
         console.log(member);
         res.status(201).send({'status': 'ok'});
     } catch(error) {
-        console.log(error);
         next(error);
     }
 })

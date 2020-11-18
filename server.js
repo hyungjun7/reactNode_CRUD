@@ -3,17 +3,20 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const dotenv = require("dotenv");
+const passport = require('passport');
 const bodyParser = require("body-parser");
 const {sequelize} = require('./models/');
 const port = process.env.PORT || 5000;
 const cors = require('cors');
 const memberRouter = require('./routes/member');
-
-
+const passportConfig = require('./passport');
 
 dotenv.config();
 //패스포트 설정
 const app = express();
+passportConfig();
+
+//테스트용 cors
 app.use(cors());
 
 sequelize.sync({force: false}) 
@@ -58,6 +61,16 @@ app.use(
   })
 );
 
+//req 객체에 패스포트 설정을 넣는다.
+app.use(passport.initialize());
+
+//req.session 객체에 패스포트 설정 넣기 session은 express.session에서 생성하기 때문에
+//무적권 뒤에 있어야 함
+app.use(passport.session());
+app.use((req, res, next) => {
+  res.locals.member = req.member;
+  next(); 
+})
 app.use('/api/users', memberRouter);
 
 app.use((req, res, next) => {
@@ -66,11 +79,12 @@ app.use((req, res, next) => {
   next(error);
 });
 
+//No default engine was specified and no extension was provided
+//뷰 엔진을 사용하지 않았는데 render 함수를 사용한 경우 해당 오류가 발생한다.
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
   res.status(err.status || 500);
-  res.render('error');
 });
 
 app.listen(port, () => {

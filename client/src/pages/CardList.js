@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { List } from "antd";
 import { Button } from "react-bootstrap";
 import {IsLoggedIn} from '../context/context'
+import { Link } from "react-router-dom";
 
 const CardList = (props) => {
   const {loggedIn} = useContext(IsLoggedIn);
@@ -37,7 +38,7 @@ const CardList = (props) => {
       }
       footer={
         <div>
-          {loggedIn ? <Button variant="outline-success" href="/write">글쓰기</Button> : ""}
+          {loggedIn ? <Link to="/write"><Button variant="outline-success">글쓰기</Button></Link> : ""}
         </div>
       }
       renderItem={(item) => (

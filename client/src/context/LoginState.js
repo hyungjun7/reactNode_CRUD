@@ -29,7 +29,7 @@ const LoginState = ({children}) => {
     };
 
     const [loggedIn, setLoggedIn] = useState(initState);
-
+    console.log(loggedIn);
     return (
         <IsLoggedIn.Provider value={loggedIn}>
             {children}

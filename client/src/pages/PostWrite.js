@@ -4,6 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {Upload, message, Modal} from 'antd';
 import {InboxOutlined} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 const {Dragger} = Upload;
 const props = {
@@ -31,10 +32,7 @@ const props = {
       setVisible(true);
     };
   
-    const okAction = (e) => {
-      setVisible(false);
-      window.history.back();
-    };
+    
   
     const cancleAction = (e) => {
       setVisible(false);
@@ -92,11 +90,10 @@ const props = {
             <Modal
               title="정말로 돌아가나요?"
               visible={visible}
-              onOk={okAction}
               onCancel={cancleAction}
               footer={[
-                <Button key="back" onClick={okAction}>확인</Button>,
-                <Button key="submit" type="primary" onClick={cancleAction}>취소</Button>
+                <><Link to="/"><Button key="back">확인</Button></Link>
+                <Button key="submit" type="primary" onClick={cancleAction}>취소</Button></>
               ]}>
               현재까지 작성하신 글은 저장되지 않습니다.
             </Modal>

@@ -29,9 +29,19 @@ const Login = (props) => {
     setVisible(false);
   };
 
-  const onLogOut = () => {
-    cancleAction();
-    logout();
+  const onLogOut = async () => {
+    const res = await fetch('/api/users/logout')
+    res.json()
+      .then((res) => {
+        if(res.status === 'ok') {
+          logout();
+          cancleAction();
+        } else {
+          alert('로그아웃 실패');
+          cancleAction();
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   const onReset = () => {
