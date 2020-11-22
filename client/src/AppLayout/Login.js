@@ -22,10 +22,12 @@ const Login = (props) => {
   };
 
   const showModal = () => {
+    onReset();
     setVisible(true);
   };
 
   const cancleAction = (e) => {
+    onReset();
     setVisible(false);
   };
 
@@ -36,9 +38,11 @@ const Login = (props) => {
         if(res.status === 'ok') {
           logout();
           cancleAction();
+          onReset();
         } else {
           alert('로그아웃 실패');
           cancleAction();
+          onReset();
         }
       })
       .catch(err => console.log(err));
@@ -63,7 +67,6 @@ const Login = (props) => {
     .then((res) => {
       console.log(res.status);
       if(res.status === 'ok') {
-        onReset();
         loginSuccess();
         cancleAction();
       } else {

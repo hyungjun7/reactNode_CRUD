@@ -47,7 +47,7 @@ const CardList = (props) => {
             </Link>
             <div style={{textAlign: 'right'}}>{item.post_date.substring(0, 10)} | {item.user_id}</div>
             </>} />
-          {item.post_content.length > 20 ? item.post_content.length.substring(0, 19) : item.post_content}
+          {item.post_content.length > 20 ? item.post_content : item.post_content}
         </List.Item>
       )}
     />

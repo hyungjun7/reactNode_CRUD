@@ -34,46 +34,46 @@ function AppLayout(props) {
                 <NavDropdown.Item>My GitHub</NavDropdown.Item>
               </Link>
               <Link to="http://fromme.tk">
-                <NavDropdown.Item>FROmme</NavDropdown.Item>
+                <NavDropdown.Item href="http://fromme.tk">FROmme</NavDropdown.Item>
               </Link>
             </NavDropdown>
             <NavDropdown title="Dev" id="basic-nav-dropdown">
               <Link to="/dev/js">
-                <NavDropdown.Item>Javascript</NavDropdown.Item>
+                <NavDropdown.Item href="/dev/js">Javascript</NavDropdown.Item>
               </Link>
               <Link to="/dev/react">
-                <NavDropdown.Item>React</NavDropdown.Item>
+                <NavDropdown.Item href="/dev/react">React</NavDropdown.Item>
               </Link>
               <Link to="/dev/node">
-                <NavDropdown.Item>Node.js</NavDropdown.Item>
+                <NavDropdown.Item href="/dev/nodejs">Node.js</NavDropdown.Item>
               </Link>
               <Link to="/dev/ts">
-                <NavDropdown.Item>Typescript</NavDropdown.Item>
+                <NavDropdown.Item href="/dev/ts">Typescript</NavDropdown.Item>
               </Link>
               <NavDropdown.Divider />
               <Link to="/dev/java">
-                <NavDropdown.Item>Java</NavDropdown.Item>
+                <NavDropdown.Item href="/dev/java">Java</NavDropdown.Item>
               </Link>
               <Link to="/dev/jsp">
-                <NavDropdown.Item>JSP</NavDropdown.Item>
+                <NavDropdown.Item href="/dev/jsp">JSP</NavDropdown.Item>
               </Link>
               <Link to="/dev/spring">
-                <NavDropdown.Item>Spring Framework</NavDropdown.Item>
+                <NavDropdown.Item href="/dev/spring">Spring Framework</NavDropdown.Item>
               </Link>
               <NavDropdown.Divider />
-              <Link to="/dev/spring">
+              <Link to="/dev/etc">
                 <NavDropdown.Item href="/dev/etc">etc</NavDropdown.Item>
               </Link>
             </NavDropdown>
             <NavDropdown title="Hobby" id="basic-nav-dropdown">
               <Link to="/hobby/photo">
-                <NavDropdown.Item>Photo</NavDropdown.Item>
+                <NavDropdown.Item href="/hobby/photo">Photo</NavDropdown.Item>
               </Link>
               <Link to="/hobby/gunpla">
-                <NavDropdown.Item>Gunpla</NavDropdown.Item>
+                <NavDropdown.Item href="/hobby/gunpla">Gunpla</NavDropdown.Item>
               </Link>
               <Link to="/hobby/trip">
-                <NavDropdown.Item>Trip</NavDropdown.Item>
+                <NavDropdown.Item href="/hobby/trip">Trip</NavDropdown.Item>
               </Link>
             </NavDropdown>
           </Nav>

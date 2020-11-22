@@ -13,7 +13,7 @@ module.exports = class Post extends Sequelize.Model {
                 defaultValue: Sequelize.NOW
             },
             post_content: {
-                type: Sequelize.STRING(30000),
+                type: Sequelize.STRING(3000),
                 allowNull: false,
             },
             user_id: {

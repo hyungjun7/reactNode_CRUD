@@ -13,14 +13,14 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
             return next(authError);
         }
         if(!member) {
-            return res.send(info.msg);
+            return res.send(info.status);
         }
         return req.login(member, (loginError) => {
             if(loginError) {
                 console.error(loginError);
                 return next(loginError);
             }
-            res.send({'status': 'ok'});
+            res.send({status: 'ok'});
         });
     })(req, res, next);
 });
@@ -36,7 +36,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
     try{
         const idChk = await Member.findOne({where: {user_id}})
         if(idChk) {
-            return res.send({'status': '이미 사용중인 아이디입니다.'});
+            return res.send({status: '이미 사용중인 아이디입니다.'});
         }
         const hashedPassword = await bcrypt.hash(user_pw, 12);
         const member = await Member.create({
@@ -46,7 +46,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
             user_grant: 2, 
         });
         console.log(member);
-        res.status(201).send({'status': 'ok'});
+        res.status(201).send({status: 'ok'});
     } catch(error) {
         next(error);
     }

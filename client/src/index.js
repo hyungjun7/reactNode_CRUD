@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.css";
 import { BrowserRouter } from "react-router-dom";
 import LoginState from './context/LoginState';
+import 'draft-js-image-plugin/lib/plugin.css';
 
 ReactDOM.render(
   //리액트에서 리덕스를 사용하기 위해 Provider로 감싸주고 props로 store를 넘겨줌

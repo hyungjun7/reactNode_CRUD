@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 const cors = require('cors');
 const memberRouter = require('./routes/member');
 const passportConfig = require('./passport');
-const postRouter = require('./routes/post');
+const postRouter = require('./routes/post/post');
 
 dotenv.config();
 //패스포트 설정
@@ -71,6 +71,7 @@ app.use((req, res, next) => {
   res.locals.member = req.member;
   next(); 
 });
+
 app.use('/api/posts', postRouter);
 app.use('/api/users', memberRouter);
 
