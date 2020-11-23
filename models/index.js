@@ -4,6 +4,7 @@ const Post = require('./post');
 const Board = require('./board');
 const Comment = require('./comment');
 const Image = require('./image');
+//배포시 모드 전환
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 
