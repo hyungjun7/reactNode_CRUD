@@ -26,7 +26,7 @@ const PostView = (props) => {
     <div style={{marginBottom: '1%'}}>
     {loggedIn && (
         <div>
-            <Link to="/write?"><Button>수정</Button></Link>
+            <Link to={`/write?id=${post.id}`}><Button>수정</Button></Link>
             <Button style={{marginLeft:'1%'}}>삭제</Button>
         </div>
     )}
