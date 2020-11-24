@@ -1,12 +1,19 @@
 const express = require('express');
 const Post = require('../../models/post');
 const Board = require('../../models/board');
+const gu = require('../../utils/utils');
+const {isLoggedIn} = require('../middleware');
 
 const router = express.Router();
+//카테고리로 구분하는 라우터는 최대한 밑으로 뺀다
+//라우터에는 라우팅하는 것만 구현될 수 있도록 하자 비지니스 로직과의 분리
+
+
 
 //최근 글 불러오는 라우터
 router.get('/recent', async (req, res, next) => {
     try {
+        console.log(req.session.user_id);
         const posts = await Post.findAll({
             where: {board_status: 1},
             order: [['id', 'DESC']]
@@ -21,14 +28,31 @@ router.get('/recent', async (req, res, next) => {
 router.get('/view', async(req, res, next) => {
     try {
         const view = await Post.findOne({
+            include: [{
+               model: Board,
+                attributes: ['board_name']
+            }],
             where: {id: req.query.id}
         });
-        
         res.send(view);
     } catch (error) {
         next(error);
     }
-})
+});
+
+//게시글 숨김 처리
+router.patch('/private', isLoggedIn, async (req, res, next) => {
+    try {
+        const {id} = req.body;
+        await Post.update({
+                board_status: 2},
+            {where: {id: id},
+            });
+        res.send({status: 'ok'});
+    } catch (error) {
+        next(error);
+    }
+});
 
 //카테고리 별로 게시글 가져오기 
 router.get('/:category', async (req, res, next) => {
@@ -36,13 +60,15 @@ router.get('/:category', async (req, res, next) => {
         const posts = await Post.findAll({
             include: [{
                 model: Board,
-                where: {board_name: req.params.category}
-                
+                where: {
+                    board_name: req.params.category,
+                }
             }],
+            where: {board_status: 1},
             order: [['post_date', 'DESC']]
         })
         res.send(posts);
-    } catch {
+    } catch (error){
         next(error);
     }
 });
@@ -51,7 +77,7 @@ router.get('/:category', async (req, res, next) => {
 router.post('/:category', async (req, res, next) => {
     try {
         let catnum = gu(req.body.category);
-        
+        console.log(req.session.user_id);
         await Post.create({
             user_id: req.session.user_id,
             post_title: req.body.title,
@@ -66,56 +92,34 @@ router.post('/:category', async (req, res, next) => {
 })
 
 //게시글 수정하는 라우터
-router.patch('/:category', async (req, res, next) => {
+router.patch('/:category', isLoggedIn, async (req, res, next) => {
     try {
-        const {title, content, category} = req.body;
+        const {title, content, id, category} = req.body;
         await Post.update({
             post_title: title,
             post_content: content,
-            where: {board_no: gu(category)},
+            board_name: category
+            },
+            {where: {id: id},
         });
-        res.status(204).send({status: 'ok'});
-    } catch (error) {
-        next(error);
-    }
-});
-
-router.delete('/:category', async(req, res, next) => {
-    try {
-        await Post.destroy({
-            where: {id: req.body.id}
-        });
-
         res.send({status: 'ok'});
     } catch (error) {
         next(error);
     }
 });
 
-//테스트용
-router.get('/test', async (req, res, next) => {
-    const board = await Board.findAll({});
-    res.send(board);
-});
 
-//게시판 분기 처리, SQL을 한 번 더 사용할까 생각도 했지만 함수로 구현하는 것이 적합할듯 하다
-const gu = (category) => {
-    let category_number = 0;
-    switch(category) {
-        case "nodejs": category_number = 1; break;
-        case "java": category_number = 2; break;
-        case "react": category_number = 3; break;
-        case "spring": category_number = 6; break;
-        case "js": category_number = 7; break;
-        case "ts": category_number = 8; break;
-        case "jsp": category_number = 9; break;
-        case "gunpla": category_number = 10; break;
-      case "photo": category_number = 11; break;
-      case "trip": category_number = 12; break;
-      case "etc": category_number = 13; break;
-      case "database": category_number = 14; break;
-    }
-    return category_number;
-}
+
+//기능만 있고 클라이어트 사이드에 버튼을 만들어 두지는 않았다.
+// router.delete('/doirhjdofljhjkfdghk', isLoggedIn, async(req, res, next) => {
+//     try {
+//         await Post.destroy({
+//             where: {id: req.body.id}
+//         });
+//         res.send({status: 'ok'});
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 
 module.exports = router;

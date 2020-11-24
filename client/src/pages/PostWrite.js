@@ -1,39 +1,74 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button, Form, Row, Col } from "react-bootstrap";
-import 'react-quill/dist/quill.snow.css';
 import { Modal} from 'antd';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import {Editor} from "react-draft-wysiwyg";
-import {EditorState, convertToRaw} from "draft-js";
+import ContentState, {EditorState, convertToRaw, convertFromHTML} from "draft-js";
 import uploadImageCallBack from '../lib/imguApi';
 import draftToHtml from 'draftjs-to-html';
+import {callApi} from "../lib/callApi";
 
 
-
-  
-  const PostWrite = () => {
-    
-    const [content, setContent] = useState({
-      editorState: EditorState.createEmpty()
-    });
+const PostWrite = () => {
+    const location = useLocation();
     const [input, setInput] = useState({
       title: '',
       category: ''
     });
     const [visible, setVisible] = useState(false);
+    const [content, setContent] = useState({
+        editorState: EditorState.createEmpty()
+    });
+
+    useEffect( () => {
+        if(location.search) {
+            callApi(`/api/posts/view?id=${location.search.split('=')[1]}`)
+                .then((res) => {
+
+                    const blocksFromHTML = convertFromHTML(res.post_content);
+                    console.log(blocksFromHTML)
+                    const state = ContentState.ContentState.createFromBlockArray(
+                        blocksFromHTML.contentBlocks,
+                        blocksFromHTML.entityMap,
+                    );
+
+                    setContent({
+                        editorState: EditorState.createWithContent(state),
+                    })
+                    // //공식 문서대로 하면 오류가 발생하는데, 컨텐츠스테이트 안에 또 정의되어 있는 컨텐츠스테이트를 사용하면 된다.
+                    // // draft_js__WEBPACK_IMPORTED_MODULE_6___default.a.createFromBlockArray is not a function
+                    setContent({
+                        editorState: EditorState.createWithContent(state),
+                    })
+                    setInput({
+                        title: res.post_title,
+                        category: res.Board.board_name
+                    });
+                })
+                .catch(err => console.log(err)
+            )
+        }
+    }, [location.search])
+
     const {title, category} = input;
+
     const showModal = () => {
       setVisible(true);
     };
-    
+
     const onClick = async () => {
-      console.log('/api/posts/'+category);
+        let actionMethod = 'POST';
+        let id = 1;
+      if(location.search) {
+          actionMethod = 'PATCH'
+          id = location.search.split('=')[1];
+      }
       const res = await fetch('/api/posts/'+category, {
-        method: 'POST',
+        method: actionMethod,
         body: JSON.stringify({
           title: title,
           content: draftToHtml(convertToRaw(content.editorState.getCurrentContent())),
-          category: category
+          category: category,
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -42,21 +77,19 @@ import draftToHtml from 'draftjs-to-html';
       await res.json()
       .then((res) => {
         if(res.status === 'ok') {
+            console.log('asdg');
           return <Redirect to="/" />
         }
       })
       .catch((err)=>console.log(err))
       
     }
-    
-  
+
     const cancleAction = (e) => {
       setVisible(false);
     };
     const margin1 = { margin: '1%' }
     const marginR1 = { marginRight: '1%' }
-    
-      
       const onChange = (e) => {
         const {name, value} = e.target;
         setInput({
@@ -67,7 +100,7 @@ import draftToHtml from 'draftjs-to-html';
       }
 
       const onEditorStateChange = (editorState) => {
-        console.log(draftToHtml(convertToRaw( editorState.getCurrentContent() ) ) );
+        console.log(editorState);
         setContent({
           editorState,
         })

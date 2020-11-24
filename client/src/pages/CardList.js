@@ -3,17 +3,24 @@ import { List } from "antd";
 import { Button } from "react-bootstrap";
 import {IsLoggedIn} from '../context/context'
 import { Link } from "react-router-dom";
-import callApi from '../lib/callApi';
+import callApiWithUseState, {makeSubTitle} from "../lib/callApi";
 
 const CardList = (props) => {
   const {loggedIn} = useContext(IsLoggedIn);
   let titleData = '최신 글';
+  const loc  = window.location.pathname;
   const [list, setList] = useState([]);
+  const path = loc.substring(loc.lastIndexOf('/'))
 
   //componentDidMount
   useEffect(() => {
-    callApi(`/api/posts/recent`, setList);
-  }, []);
+      console.log(path)
+      if(path === '/') {
+          callApiWithUseState(`/api/posts/recent`, setList);
+      } else {
+          callApiWithUseState(`/api/posts${path}`, setList);
+      }
+  }, [path]);
 
   
   return (
@@ -48,8 +55,7 @@ const CardList = (props) => {
             </Link>
             <div style={{textAlign: 'right'}}>{item.post_date.substring(0, 10)} | {item.user_id}</div>
             </>} />
-            {/** 컨텐츠가 HTML인데 어떤 방법으로 표시할까 */}
-          {item.post_content.length > 20 ? item.post_content : item.post_content}
+          {makeSubTitle((item.post_content))}
         </List.Item>
       )}
     />

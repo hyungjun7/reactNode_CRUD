@@ -30,12 +30,12 @@ function AppLayout(props) {
               <Nav.Link>About</Nav.Link>
             </Link>
             <NavDropdown title="Link" id="basic-nav-dropdown">
-              <Link to="#">
-                <NavDropdown.Item>My GitHub</NavDropdown.Item>
-              </Link>
-              <Link to="http://fromme.tk">
-                <NavDropdown.Item href="http://fromme.tk">FROmme</NavDropdown.Item>
-              </Link>
+              <NavDropdown.Item><a href="https://github.com/step7568" target="_blank" rel="noopener noreferrer">
+                My GitHub
+              </a></NavDropdown.Item>
+              <NavDropdown.Item><a href="http://fromme.tk" target="_blank" rel="noopener noreferrer">
+                FROmme
+              </a></NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Dev" id="basic-nav-dropdown">
               <Link to="/dev/js">
@@ -44,9 +44,9 @@ function AppLayout(props) {
               <Link to="/dev/react">
                 <NavDropdown.Item href="/dev/react">React</NavDropdown.Item>
               </Link>
-              <Link to="/dev/node">
-                <NavDropdown.Item href="/dev/nodejs">Node.js</NavDropdown.Item>
-              </Link>
+
+                <NavDropdown.Item><Link to="/dev/nodejs">Node.js</Link></NavDropdown.Item>
+
               <Link to="/dev/ts">
                 <NavDropdown.Item href="/dev/ts">Typescript</NavDropdown.Item>
               </Link>
@@ -78,8 +78,8 @@ function AppLayout(props) {
             </NavDropdown>
           </Nav>
           {!loggedIn && (
-            <Link to="/join" style={{ marginRight: "1%" }}>
-              <Button variant="outline-success">회원가입</Button>
+            <Link to="#" style={{ marginRight: "1%" }}>
+              <Button variant="outline-success" onClick={()=>alert('현재 회원가입 제한해놨습니다.')}>회원가입</Button>
             </Link>
           )}
           <Login />

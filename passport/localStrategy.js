@@ -7,6 +7,7 @@ module.exports = () => {
     passport.use(new LocalStrategy({
         usernameField: 'user_id',
         passwordField: 'user_pw',
+
     }, async (user_id, user_pw, done) => {
         try {
             const member = await Member.findOne({where: {user_id}});

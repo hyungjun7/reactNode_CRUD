@@ -2,9 +2,10 @@ import React, { useState, useContext } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Modal } from "antd";
 import {IsLoggedIn} from '../context/context'
+import LoginModal from "../components/LoginModal";
 
 const Login = (props) => {
-  const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
   const [input, setInput] = useState({
     user_id: '',
     user_pw: ''
@@ -65,13 +66,13 @@ const Login = (props) => {
     })
     await res.json()
     .then((res) => {
-      console.log(res.status);
+      console.log(res);
       if(res.status === 'ok') {
         loginSuccess();
         cancleAction();
       } else {
-        //모달 창이 떠있는 상태에서 alert가 작동하지 않음! 왜 이럴까
-        //모달 창의 텍스트에 직접 실패했다고 입력하는 것도 괜찮을듯 싶다.
+        //모달 창이 떠있는 상태에서 alert가 작동하지 않음! 왜 이럴까 -> 해결
+          //서버에서 제이슨말고 문자열이 날아왔음
         alert(res.status);
       }
     })
@@ -114,41 +115,14 @@ const Login = (props) => {
       >
         로그인
       </Button>
-      <Modal
-        title="로그인"
+    <LoginModal
+        cancleAction={cancleAction}
+        onLogIn={onLogIn}
+        user_id={user_id}
+        user_pw={user_pw}
         visible={visible}
-        onCancel={cancleAction}
-        footer={[
-          <Button key="back" onClick={cancleAction}>
-            취소
-          </Button>,
-          <Button key="submit" type="primary" onClick={onLogIn}>
-            로그인
-          </Button>,
-        ]}
-      >
-        <div style={{ marginLeft: "10%", marginRight: "10%" }}>
-          <Form>
-            <Form.Group controlId="user_id">
-              <Form.Label>아이디</Form.Label>
-              <Form.Control type="input" placeholder="아이디를 입력하세요"
-              name="user_id"
-              value={user_id}
-              onChange={onChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="user_pw">
-              <Form.Label>비밀번호</Form.Label>
-              <Form.Control type="password" placeholder="비밀번호를 입력하세요" 
-              name="user_pw"
-              value={user_pw}
-              onChange={onChange}
-              />
-            </Form.Group>
-          </Form>
-        </div>
-      </Modal>
+        onChange={onChange}
+    />
     </>
   );
 };
