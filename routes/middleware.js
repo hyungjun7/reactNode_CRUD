@@ -5,7 +5,7 @@ exports.isLoggedIn = (req, res, next) => {
     if(req.isAuthenticated()) {
         next();
     } else {
-        res.status(403).send('로그인이 필요합니다.');
+        res.status(403).send({status: 'require-login'});
     }
 };
 
@@ -13,7 +13,6 @@ exports.isNotLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()) {
         next();
     } else {
-        const msg = encodeURIComponent('현재 접속 중인 유저입니다.');
-        res.redirect(`/?error=${msg}`);
+        res.redirect({status: 'already-loggedIn'});
     }
 };

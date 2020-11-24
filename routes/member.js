@@ -28,7 +28,7 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
 router.get('/logout', isLoggedIn, (req, res) => {
     req.logout();
     req.session.destroy();
-    res.send({'status': 'ok'});
+    res.send({status: 'ok'});
 })
 
 router.post('/join', isNotLoggedIn, async (req, res, next) => {

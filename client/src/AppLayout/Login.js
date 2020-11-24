@@ -11,8 +11,9 @@ const Login = (props) => {
   });
   
   const {user_id, user_pw} = input;
+  //로그인 상태관리를 위한 Context
   const {loggedIn, loginSuccess, logout} = useContext(IsLoggedIn);
-
+  //인풋 태그 값 바뀌면 해당 인풋 태그의 name 값을 key 값으로 하여 value값을 바꾼다
   const onChange = (e) => {
     const {value, name} = e.target;
     setInput({
@@ -20,12 +21,12 @@ const Login = (props) => {
       [name]: value
     });
   };
-
+  //모달 창 보여주세여
   const showModal = () => {
     onReset();
     setVisible(true);
   };
-
+  //모달 창 닫아주세여
   const cancleAction = (e) => {
     onReset();
     setVisible(false);
@@ -38,7 +39,6 @@ const Login = (props) => {
         if(res.status === 'ok') {
           logout();
           cancleAction();
-          onReset();
         } else {
           alert('로그아웃 실패');
           cancleAction();
@@ -70,6 +70,8 @@ const Login = (props) => {
         loginSuccess();
         cancleAction();
       } else {
+        //모달 창이 떠있는 상태에서 alert가 작동하지 않음! 왜 이럴까
+        //모달 창의 텍스트에 직접 실패했다고 입력하는 것도 괜찮을듯 싶다.
         alert(res.status);
       }
     })

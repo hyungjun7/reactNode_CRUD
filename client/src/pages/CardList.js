@@ -10,6 +10,7 @@ const CardList = (props) => {
   let titleData = '최신 글';
   const [list, setList] = useState([]);
 
+  //componentDidMount
   useEffect(() => {
     callApi(`/api/posts/recent`, setList);
   }, []);
@@ -47,6 +48,7 @@ const CardList = (props) => {
             </Link>
             <div style={{textAlign: 'right'}}>{item.post_date.substring(0, 10)} | {item.user_id}</div>
             </>} />
+            {/** 컨텐츠가 HTML인데 어떤 방법으로 표시할까 */}
           {item.post_content.length > 20 ? item.post_content : item.post_content}
         </List.Item>
       )}
