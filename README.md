@@ -21,3 +21,14 @@
 <ul>
         <li>Mysql v8 (RDS)</li>
 </ul>
+
+<h3>Server</h3>
+<ul>
+        <li>AWS EC2 centos 7</li>
+</ul>
+
+<h3>Test</h3>
+<ul>
+        <li>Jest</li>
+        <li>Postman</li>
+</ul>
