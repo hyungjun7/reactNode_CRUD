@@ -23,6 +23,7 @@ router.get('/view', async(req, res, next) => {
         const view = await Post.findOne({
             where: {id: req.query.id}
         });
+        
         res.send(view);
     } catch (error) {
         next(error);
@@ -50,21 +51,46 @@ router.get('/:category', async (req, res, next) => {
 router.post('/:category', async (req, res, next) => {
     try {
         let catnum = gu(req.body.category);
-        console.log(req.body.content);
         
         await Post.create({
-            user_id: 'step7',
+            user_id: req.session.user_id,
             post_title: req.body.title,
             post_content: req.body.content,
             board_no: catnum,
         });
 
-        console.log('ㅇㅇㅇㅇ');
         res.send({status: 'ok'})
     } catch (error) { 
         next(error)
     }
 })
+
+//게시글 수정하는 라우터
+router.patch('/:category', async (req, res, next) => {
+    try {
+        const {title, content, category} = req.body;
+        await Post.update({
+            post_title: title,
+            post_content: content,
+            where: {board_no: gu(category)},
+        });
+        res.status(204).send({status: 'ok'});
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.delete('/:category', async(req, res, next) => {
+    try {
+        await Post.destroy({
+            where: {id: req.body.id}
+        });
+
+        res.send({status: 'ok'});
+    } catch (error) {
+        next(error);
+    }
+});
 
 //테스트용
 router.get('/test', async (req, res, next) => {
@@ -74,12 +100,22 @@ router.get('/test', async (req, res, next) => {
 
 //게시판 분기 처리, SQL을 한 번 더 사용할까 생각도 했지만 함수로 구현하는 것이 적합할듯 하다
 const gu = (category) => {
-    let str = 0;
+    let category_number = 0;
     switch(category) {
-        case "nodejs": str = 1; break;
-        case "java": str = 2; break;
+        case "nodejs": category_number = 1; break;
+        case "java": category_number = 2; break;
+        case "react": category_number = 3; break;
+        case "spring": category_number = 6; break;
+        case "js": category_number = 7; break;
+        case "ts": category_number = 8; break;
+        case "jsp": category_number = 9; break;
+        case "gunpla": category_number = 10; break;
+      case "photo": category_number = 11; break;
+      case "trip": category_number = 12; break;
+      case "etc": category_number = 13; break;
+      case "database": category_number = 14; break;
     }
-    return str;
+    return category_number;
 }
 
 module.exports = router;
