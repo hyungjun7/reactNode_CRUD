@@ -17,10 +17,10 @@ module.exports = () => {
                 if(result) {
                     done(null, member);
                 } else {
-                    done(null, false, {msg: '아이디 또는 비밀번호가 일치하지 않습니다.'});
+                    done(null, false, {status: '아이디 또는 비밀번호가 일치하지 않습니다.'});
                 }
             } else {
-                done(null, false, {msg: '아이디 또는 비밀번호가 일치하지 않습니다.'});
+                done(null, false, {status: '아이디 또는 비밀번호가 일치하지 않습니다.'});
             }
         } catch (error) {
             done(error);
