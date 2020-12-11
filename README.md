@@ -1,5 +1,5 @@
 <h1>React와 Node.js 게시판</h1>
-
+<h4>ZeroCho님의 Node.js 교과서를 보며 만들어보았습니다.</h4>
 <p>사용된 프레임워크 및 라이브러리</p>
 <h3>Front-end</h3>
 <ul>
